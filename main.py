@@ -19,5 +19,4 @@ def find_digits(string: str):
 
 if __name__ == '__main__':
     string = "switchport trunk allowed vlan 1,3,10,20,30,100:3434"
-    digits = find_digits(string)
-    print(digits)
+    print(find_digits(string))
