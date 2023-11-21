@@ -1,3 +1,5 @@
+import json
+
 
 def find_digits(string: str):
     ''' Поиск целых чисел в строке
@@ -18,5 +20,10 @@ def find_digits(string: str):
 
 
 if __name__ == '__main__':
-    string = "switchport trunk allowed vlan 1,3,10,20,30,100:3434"
-    print(find_digits(string))
+
+    with open('bla.json') as file:
+        li = json.load(file)
+
+    print(type(li))
+    # string = "switchport trunk allowed vlan 1,3,10,20,30,100:3434"
+    # print(find_digits(string))

@@ -1,39 +1,42 @@
-class Car:
-    """Простая модель автомобиля."""
-
-    def __init__(self, make, model, year):
-        self.make = make
-        self.model = model
-        self.year = year
-        self.odometer_reading = 0
-
-    def get_descriptive_name(self):
-        long_name = str(self.year) + ' ' + self.make + ' ' + self.model
-        return long_name.title()
-
-    def read_odometer(self):
-        print("This car has " + str(self.odometer_reading) + " miles on it.")
-
-    def update_odometer(self, mileage):
-        if mileage >= self.odometer_reading:
-            self.odometer_reading = mileage
-        else:
-            print("You can't roll back an odometer!")
-
-    def increment_odometer(self, miles):
-        self.odometer_reading += miles
+import random
 
 
-class Battery:
-    """Простая модель аккумулятора электромобиля."""
+class Cell:
+    def __init__(self, around_mines=0, mine=False):
+        self.around_mines = around_mines
+        self.mine = mine
+        self.fl_open = True
 
-    def __init__(self, battery_size=70):
-        """Инициализирует атрибуты аккумулятора."""
-        self.battery_size = battery_size
 
-    def describe_battery(self):
-        """Выводит информацию о мощности аккумулятора."""
-        print("This car has a " + str(self.battery_size) + "-kWh battery.")
+class GamePole:
+    def __init__(self, N, M):
+        self._n = N
+        self._m = M
+        self.pole = [[Cell() for _ in range(self._n)] for _ in range(self._n)]
+        self.init()
 
-    def upgrade_battery(self):
-        self.battery_size = 85
+    def init(self):
+        m = 0
+        while m < self._m:
+            i = random.randint(0, self._n - 1)
+            j = random.randint(0, self._n - 1)
+            if self.pole[i][j].mine:
+                continue
+            self.pole[i][j].mine = True
+            m += 1
+
+        indx = (-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)
+        for x in range(self._n):
+            for y in range(self._n):
+                if not self.pole[x][y].mine:
+                    mines = sum((self.pole[x+i][y+j].mine for i, j in indx if 0 <= x+i < self._n and 0 <= y+j < self._n))
+                    self.pole[x][y].around_mines = mines
+
+    def show(self):
+        for row in self.pole:
+            print(*map(lambda x: '#' if not x.fl_open else x.around_mines if not x.mine else '*', row))
+
+
+pole_game = GamePole(10, 12)
+pole_game.show()
+
